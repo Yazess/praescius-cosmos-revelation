@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Praescius COSMOS - Know Before You Make</title>
+    <meta name="description" content="Stop gambling on formulations. See 6 months ahead in 48 hours.">
+    
+    <!-- Critical CSS (inline for performance) -->
+    <style>
+        :root {
+            --cosmos-dark: #0A0E27;
+            --cosmos-light: #F7F9FC;
+            --revelation-purple: #6B46C1;
+            --heartbeat-red: #DC2626;
+            --bpm-current: 100;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-serif: 'Source Serif 4', Georgia, serif;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-sans);
+            background: var(--cosmos-dark);
+            color: var(--cosmos-light);
+            overflow-x: hidden;
+        }
+        
+        /* Heartbeat Indicator */
+        .heartbeat-indicator {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, var(--heartbeat-red), transparent);
+            border-radius: 50%;
+            animation: heartbeat-pulse calc(60s / var(--bpm-current)) ease-in-out infinite;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .heartbeat-indicator.active {
+            opacity: 1;
+        }
+        
+        @keyframes heartbeat-pulse {
+            0%, 100% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.15); opacity: 1; }
+        }
+        
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+        }
+        
+        h1 {
+            font-family: var(--font-serif);
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 300;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards;
+        }
+        
+        .subhead {
+            font-size: clamp(1.1rem, 3vw, 1.5rem);
+            color: rgba(247, 249, 252, 0.8);
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.3s forwards;
+        }
+        
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+        }
+        
+        /* Loading State */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--cosmos-dark);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+        
+        .loading.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+    </style>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300..700;1,8..60,300..700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Loading State -->
+    <div class="loading" id="loading">
+        <div class="loading-text">Initializing...</div>
+    </div>
+    
+    <!-- Heartbeat Indicator -->
+    <div class="heartbeat-indicator" id="heartbeat"></div>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Still Gambling on Formulations?</h1>
+        <p class="subhead">
+            90% of R&D fails. Not because you're not brilliant.<br>
+            Because you can't see 6 months ahead. Until now.
+        </p>
+    </section>
+    
+    <!-- Heartbeat Engine Web Component -->
+    <heartbeat-engine id="heartbeat-engine"></heartbeat-engine>
+    
+    <!-- GSAP & ScrollTrigger -->
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+    
+    <!-- Core Application -->
+    <script type="module">
+        // Heartbeat Engine Web Component
+        class HeartbeatEngine extends HTMLElement {
+            constructor() {
+                super();
+                this.attachShadow({ mode: 'open' });
+                this._audioContext = null;
+                this._bpm = 100;
+                this._startTime = performance.now();
+            }
+            
+            connectedCallback() {
+                this.initializeHeartbeat();
+            }
+            
+            async initializeHeartbeat() {
+                // Initialize audio context on first user interaction
+                const startHeartbeat = async () => {
+                    if (!this._audioContext) {
+                        this._audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                        this.createHeartbeat();
+                        
+                        // Show visual heartbeat
+                        document.getElementById('heartbeat').classList.add('active');
+                        
+                        // Log performance
+                        const latency = performance.now() - this._startTime;
+                        console.log(`First heartbeat: ${latency.toFixed(0)}ms`);
+                    }
+                };
+                
+                // Start on any interaction
+                ['click', 'touchstart', 'scroll'].forEach(event => {
+                    document.addEventListener(event, startHeartbeat, { once: true });
+                });
+                
+                // Auto-start after 1 second if no interaction
+                setTimeout(startHeartbeat, 1000);
+            }
+            
+            createHeartbeat() {
+                const beatInterval = 60 / this._bpm;
+                
+                const playBeat = () => {
+                    const now = this._audioContext.currentTime;
+                    
+                    // Create oscillator for heartbeat sound
+                    const osc = this._audioContext.createOscillator();
+                    const gain = this._audioContext.createGain();
+                    
+                    osc.frequency.value = 40; // Deep bass
+                    osc.type = 'sine';
+                    
+                    // Envelope
+                    gain.gain.setValueAtTime(0, now);
+                    gain.gain.linearRampToValueAtTime(0.5, now + 0.01);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+                    
+                    osc.connect(gain);
+                    gain.connect(this._audioContext.destination);
+                    
+                    osc.start(now);
+                    osc.stop(now + 0.2);
+                    
+                    // Schedule next beat
+                    setTimeout(playBeat, beatInterval * 1000);
+                };
+                
+                playBeat();
+            }
+            
+            transitionBPM(target, duration = 2000) {
+                const start = this._bpm;
+                const startTime = performance.now();
+                
+                const animate = () => {
+                    const elapsed = performance.now() - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    
+                    this._bpm = Math.round(start + (target - start) * progress);
+                    document.documentElement.style.setProperty('--bpm-current', this._bpm);
+                    
+                    if (progress < 1) {
+                        requestAnimationFrame(animate);
+                    }
+                };
+                
+                animate();
+            }
+        }
+        
+        customElements.define('heartbeat-engine', HeartbeatEngine);
+        
+        // Initialize
+        window.addEventListener('DOMContentLoaded', () => {
+            // Hide loading screen
+            setTimeout(() => {
+                document.getElementById('loading').classList.add('hidden');
+            }, 500);
+            
+            // Performance tracking
+            console.log('Praescius COSMOS - Revelation Engine Initialized');
+            console.log('Target: 97+ Lighthouse | Current: Measuring...');
+        });
+    </script>
+</body>
+</html>
