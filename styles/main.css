@@ -1,0 +1,301 @@
+/* Main Stylesheet - The Revelation Engine */
+
+/* Custom Properties */
+:root {
+    /* Colors */
+    --cosmos-primary: #0066CC;
+    --cosmos-secondary: #00A8E8;
+    --cosmos-tertiary: #00C9A7;
+    --cosmos-dark: #001F3F;
+    --cosmos-darker: #000A14;
+    --cosmos-light: #F0F8FF;
+    --cosmos-white: #FFFFFF;
+    
+    /* Gradients */
+    --cosmos-gradient-trust: linear-gradient(135deg, #001F3F 0%, #0066CC 50%, #00A8E8 100%);
+    --cosmos-gradient-revelation: linear-gradient(135deg, #0066CC 0%, #00C9A7 100%);
+    
+    /* Typography */
+    --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-serif: 'Source Serif 4', 'Georgia', serif;
+    
+    /* Animations */
+    --cosmos-bpm: 72;
+    --cosmos-duration: 0.3s;
+    --cosmos-ease: cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* Spacing */
+    --space-xs: 0.5rem;
+    --space-sm: 1rem;
+    --space-md: 2rem;
+    --space-lg: 4rem;
+    --space-xl: 8rem;
+    
+    /* Blur & Opacity States */
+    --cosmos-blur-arrival: 10px;
+    --cosmos-blur-explore: 5px;
+    --cosmos-blur-reveal: 0px;
+    --cosmos-opacity-arrival: 0.3;
+    --cosmos-opacity-explore: 0.7;
+    --cosmos-opacity-reveal: 1;
+}
+
+/* Base Reset */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 2rem;
+}
+
+body {
+    font-family: var(--font-primary);
+    background: var(--cosmos-darker);
+    color: var(--cosmos-light);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--cosmos-white);
+}
+
+h1 {
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    letter-spacing: -0.02em;
+}
+
+h2 {
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    margin-bottom: var(--space-md);
+}
+
+h3 {
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+p {
+    font-size: clamp(1rem, 1.5vw, 1.25rem);
+    max-width: 65ch;
+    margin: 0 auto;
+}
+
+/* Sections */
+section {
+    min-height: 100vh;
+    padding: var(--space-lg) var(--space-md);
+    position: relative;
+}
+
+/* Hero Section */
+.hero {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url('/assets/images/textures/organic-noise.webp');
+    opacity: 0.1;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+}
+
+/* Valley of Failure */
+.valley-of-failure {
+    background: var(--cosmos-gradient-trust);
+    padding: var(--space-xl) var(--space-md);
+}
+
+.valley-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.valley-title {
+    text-align: center;
+    margin-bottom: var(--space-xl);
+    opacity: 0;
+    animation: fadeIn 1s ease-out forwards;
+}
+
+/* Vignettes */
+.vignette {
+    margin-bottom: var(--space-xl);
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    opacity: 0;
+    filter: blur(var(--cosmos-blur-arrival));
+    transition: all 1s var(--cosmos-ease);
+}
+
+.vignette.revealed {
+    opacity: 1;
+    filter: blur(0);
+}
+
+.vignette img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.vignette-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: var(--space-md);
+    background: linear-gradient(to top, rgba(0,31,63,0.95), transparent);
+}
+
+.handwritten {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 1.5rem;
+    color: var(--cosmos-light);
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.email-preview {
+    font-family: monospace;
+    font-size: 0.9rem;
+    color: #ff6b6b;
+    background: rgba(0,0,0,0.3);
+    padding: var(--space-sm);
+    border-radius: 4px;
+}
+
+.notebook {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    color: var(--cosmos-light);
+    transform: rotate(-2deg);
+}
+
+/* Revelation Section */
+.revelation {
+    background: var(--cosmos-gradient-revelation);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.revelation-container {
+    text-align: center;
+    max-width: 900px;
+}
+
+.pipeline-visualization {
+    width: 100%;
+    height: 400px;
+    margin: var(--space-lg) 0;
+    position: relative;
+}
+
+/* CTA Section */
+.transformation {
+    background: var(--cosmos-darker);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cta-container {
+    text-align: center;
+}
+
+.cta-primary {
+    background: var(--cosmos-gradient-revelation);
+    color: var(--cosmos-white);
+    border: none;
+    padding: 1.5rem 3rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-primary::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.cta-primary:hover::before {
+    width: 400px;
+    height: 400px;
+}
+
+.cta-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0,102,204,0.5);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    section {
+        padding: var(--space-md) var(--space-sm);
+    }
+    
+    .vignette-overlay {
+        padding: var(--space-sm);
+    }
+    
+    .cta-primary {
+        padding: 1rem 2rem;
+        font-size: 1rem;
+    }
+}
+
+/* Performance: Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
