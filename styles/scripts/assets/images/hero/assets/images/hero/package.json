@@ -1,0 +1,17 @@
+{
+  "name": "praescius-cosmos-revelation",
+  "version": "1.0.0",
+  "description": "The Revelation Engine - Revolutionary B2B Experience",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx serve .",
+    "build": "echo 'Static site - no build required'",
+    "preview": "npx serve ."
+  },
+  "keywords": ["b2b", "formulation", "predictive", "digital-twin"],
+  "author": "The Synapse Creative Cadre",
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.2.0"
+  }
+}
